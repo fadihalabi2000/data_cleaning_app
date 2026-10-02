@@ -1,4 +1,4 @@
-CLINIC_TYPES = ["نسائية", "عامة", "ضماد", "داخلية / NCD", "أطفال"]
+CLINIC_TYPES = ["نسائية", "مخاض", "عامة", "ضماد", "داخلية / NCD", "أطفال"]
 
 FIELD_ALIASES = {
     "org_unit": ["Organisation unit name", "اسم المركز", "المركز الصحي"],
@@ -33,6 +33,7 @@ DEFAULT_SETTINGS = {
 
 CLINIC_HINTS = {
     "نسائية": ["نسائية", "women", "anc", "obstetric", "gyne"],
+    "مخاض": ["مخاض", "maternity", "labor", "labour", "delivery"],
     "عامة": ["عامة", "general"],
     "ضماد": ["ضماد", "dressing", "wound"],
     "داخلية / NCD": ["داخلية", "ncd", "chronic"],

@@ -12,11 +12,12 @@ st.set_page_config(page_title="منصة تدقيق المراكز الصحية",
 CLINICS={
  "أطفال":("👶","التشخيص والعمر",[("diagnosis","أعمدة تشخيص الأطفال")]),
  "نسائية":("🌷","الحمل والتشخيص النسائي",[("diagnosis","أعمدة التشخيص المرجعية"),("gyne_indicators","أعمدة الأمراض النسائية والتوليدية")]),
+ "مخاض":("🤱","خدمات المخاض — القواعد الأساسية المشتركة",[]),
  "ضماد":("🩹","الضماد والخياطة",[("dressing","أعمدة خدمات الضماد")]),
  "عامة":("🩺","التشخيص والضغط",[("diagnosis","أعمدة تشخيص العيادة العامة")]),
  "داخلية / NCD":("❤️","الأمراض المزمنة",[("ncd","أعمدة تشخيص NCD"),("ncd_na","أعمدة NCD غير المنطبق")])}
 COMMON=["org_unit","program_stage","patient_id","full_name","birth_date","event_date","gender","residency","visit_type","consultation_type","imaging","age"]
-EXTRA={"نسائية":["anc_visit"],"ضماد":["injury_type"],"أطفال":[],"عامة":[],"داخلية / NCD":[]}
+EXTRA={"نسائية":["anc_visit"],"مخاض":[],"ضماد":["injury_type"],"أطفال":[],"عامة":[],"داخلية / NCD":[]}
 st.markdown("""<style>html,body,[class*="css"],.stApp{direction:rtl;text-align:right}.stApp{background:#f5f8fb}.block-container{max-width:1380px;padding-top:1.3rem}.hero{background:linear-gradient(135deg,#083344,#075985,#0e7490);color:#fff;padding:28px 34px;border-radius:24px;box-shadow:0 15px 38px #07598525}.hero h1{margin:0}.hero p{color:#d9f1f7}.badge{padding:7px 12px;border:1px solid #ffffff38;background:#ffffff14;border-radius:30px}.step{font-size:1.25rem;font-weight:800;color:#17324d;margin:24px 0 10px}.num{display:inline-grid;place-items:center;width:32px;height:32px;background:#0e7490;color:white;border-radius:10px;margin-left:8px}.card{background:white;border:1px solid #e2e8f0;padding:17px;border-radius:16px;box-shadow:0 5px 18px #17324d0b}[data-testid="stMetric"]{background:white;border:1px solid #e2e8f0;padding:14px;border-radius:15px}[data-testid="stFileUploaderDropzone"]{background:white;border:2px dashed #7dd3fc;border-radius:16px}.stButton>button[kind="primary"],.stDownloadButton>button[kind="primary"]{background:linear-gradient(90deg,#0369a1,#0e7490);border:0;border-radius:12px;min-height:46px;font-weight:800}[data-testid="stDataFrame"]{direction:rtl}</style>""",unsafe_allow_html=True)
 st.markdown('<div class="hero"><h1>منصة تدقيق بيانات المراكز الصحية</h1><p>اكتشاف الأخطاء وإنتاج تقارير قابلة للتصحيح دون المساس بملف المصدر.</p><span class="badge">🔒 قراءة وتدقيق فقط</span></div>',unsafe_allow_html=True)
 if "v3_results" not in st.session_state: st.session_state.v3_results=None
@@ -51,8 +52,9 @@ with t1:
   mapping[key]=cols[i%3].selectbox(aliases[0],opts,idx,format_func=lambda x:"— غير موجود —" if x is None else str(x),key=f"v3_{clinic}_{key}")
  for key in set(FIELD_ALIASES)-set(COMMON)-set(EXTRA[clinic]): mapping[key]=None
 with t2:
- st.markdown("#### أعمدة التشخيص")
- st.caption("يُكتشف غياب التشخيص عندما تكون جميع الأعمدة المحددة فارغة في السجل.")
+ st.markdown("#### إعدادات العيادة")
+ if clinic=="مخاض": st.info("تُطبق على عيادة المخاض القواعد الأساسية المشتركة تلقائياً، ولا يلزم اختيار أعمدة تشخيص خاصة.")
+ else: st.caption("يُكتشف غياب التشخيص عندما تكون جميع الأعمدة المحددة فارغة في السجل.")
  for key,label in clinic_groups: groups[key]=st.multiselect(label,list(df.columns),default=groups.get(key,[]),key=f"v3g_{clinic}_{key}")
  if clinic=="نسائية":
   key="anc_visit"; idx=opts.index(mapping[key]) if mapping.get(key) in opts else 0
